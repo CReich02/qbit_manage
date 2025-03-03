@@ -83,21 +83,35 @@ parser.add_argument(
     default="",
     help="Base URL path for the web UI (e.g., '/qbit-manage'). Default is empty (root).",
 )
-parser.add_argument("-db", "--debug", dest="debug", help=argparse.SUPPRESS, action="store_true", default=False)
-parser.add_argument("-tr", "--trace", dest="trace", help=argparse.SUPPRESS, action="store_true", default=False)
+parser.add_argument(
+    "-db", 
+    "--debug", 
+    dest="debug", 
+    action="store_true", 
+    default=os.environ.get("QBT_DEBUG", False), 
+    help=argparse.SUPPRESS
+)
+parser.add_argument(
+    "-tr", 
+    "--trace", 
+    dest="trace", 
+    action="store_true", 
+    default=os.environ.get("QBT_TRACE", False), 
+    help=argparse.SUPPRESS
+)
 parser.add_argument(
     "-r",
     "--run",
     dest="run",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_RUN", False),
     help="Run without the scheduler. Script will exit after completion.",
 )
 parser.add_argument(
     "-sch",
     "--schedule",
     dest="schedule",
-    default="1440",
+    default=os.environ.get("QBT_SCHEDULE", "1440"),
     type=str,
     help=(
         "Schedule to run every x minutes. (Default set to 1440 (1 day))."
@@ -108,7 +122,7 @@ parser.add_argument(
     "-sd",
     "--startup-delay",
     dest="startupDelay",
-    default="0",
+    default=os.environ.get("QBT_STARTUP_DELAY", "0"),
     type=str,
     help="Set delay in seconds on the first run of a schedule (Default set to 0)",
 )
@@ -117,7 +131,7 @@ parser.add_argument(
     "--config-file",
     dest="configfiles",
     action="store",
-    default="config.yml",
+    default=os.environ.get("QBT_CONFIG", "config.yml"),
     type=str,
     help=argparse.SUPPRESS,
 )
@@ -137,7 +151,7 @@ parser.add_argument(
     "--log-file",
     dest="logfile",
     action="store",
-    default="qbit_manage.log",
+    default=os.environ.get("QBT_LOGFILE", "qbit_manage.log"),
     type=str,
     help="This is used if you want to use a different name for your log file. Example: tv.log",
 )
@@ -146,7 +160,7 @@ parser.add_argument(
     "--recheck",
     dest="recheck",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_RECHECK", False),
     help="Recheck paused torrents sorted by lowest size. Resume if Completed.",
 )
 parser.add_argument(
@@ -154,7 +168,7 @@ parser.add_argument(
     "--cat-update",
     dest="cat_update",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_CAT_UPDATE", False),
     help="Use this if you would like to update your categories.",
 )
 parser.add_argument(
@@ -162,7 +176,7 @@ parser.add_argument(
     "--tag-update",
     dest="tag_update",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_TAG_UPDATE", False),
     help=(
         "Use this if you would like to update your tags and/or set seed goals/limit upload speed by tag."
         " (Only adds tags to untagged torrents)"
@@ -173,7 +187,7 @@ parser.add_argument(
     "--rem-unregistered",
     dest="rem_unregistered",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_REM_UNREGISTERED", False),
     help="Use this if you would like to remove unregistered torrents.",
 )
 parser.add_argument(
@@ -181,7 +195,7 @@ parser.add_argument(
     "--tag-tracker-error",
     dest="tag_tracker_error",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_TAG_TRACKER_ERROR", False),
     help="Use this if you would like to tag torrents that do not have a working tracker.",
 )
 parser.add_argument(
@@ -189,7 +203,7 @@ parser.add_argument(
     "--rem-orphaned",
     dest="rem_orphaned",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_REM_ORPHANED", False),
     help="Use this if you would like to remove orphaned files.",
 )
 parser.add_argument(
@@ -197,7 +211,7 @@ parser.add_argument(
     "--tag-nohardlinks",
     dest="tag_nohardlinks",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_TAG_NOHARDLINKS", False),
     help=(
         "Use this to tag any torrents that do not have any hard links associated with any of the files. "
         "This is useful for those that use Sonarr/Radarr which hard link your media files with the torrents for seeding. "
@@ -210,7 +224,7 @@ parser.add_argument(
     "--share-limits",
     dest="share_limits",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_SHARE_LIMITS", False),
     help=(
         "Use this to help apply and manage your torrent share limits based on your tags/categories."
         "This can apply a max ratio, seed time limits to your torrents or limit your torrent upload speed as well."
@@ -222,7 +236,7 @@ parser.add_argument(
     "--skip-cleanup",
     dest="skip_cleanup",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_SKIP_CLEANUP", False),
     help="Use this to skip cleaning up Recycle Bin/Orphaned directory.",
 )
 parser.add_argument(
@@ -230,7 +244,7 @@ parser.add_argument(
     "--skip-qb-version-check",
     dest="skip_qb_version_check",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_SKIP_QB_VERSION_CHECK", False),
     # help="Bypass qBittorrent/libtorrent version compatibility check. "
     # "You run the risk of undesirable behavior and will receive no support.",
     help=argparse.SUPPRESS,
@@ -240,21 +254,51 @@ parser.add_argument(
     "--dry-run",
     dest="dry_run",
     action="store_true",
-    default=False,
+    default=os.environ.get("QBT_DRY_RUN", False),
     help="If you would like to see what is gonna happen but not actually move/delete or tag/categorize anything.",
 )
 parser.add_argument(
-    "-ll", "--log-level", dest="log_level", action="store", default="INFO", type=str, help="Change your log level."
+    "-ll", 
+    "--log-level", 
+    dest="log_level", 
+    action="store", 
+    default=os.environ.get("QBT_LOG_LEVEL", "INFO"), 
+    type=str, 
+    help="Change your log level."
 )
 parser.add_argument(
-    "-d", "--divider", dest="divider", help="Character that divides the sections (Default: '=')", default="=", type=str
+    "-d", 
+    "--divider",
+    dest="divider", 
+    default=os.environ.get("QBT_DIVIDER", "="), 
+    type=str,
+    help="Character that divides the sections (Default: '=')"
 )
-parser.add_argument("-w", "--width", dest="width", help="Screen Width (Default: 100)", default=100, type=int)
 parser.add_argument(
-    "-ls", "--log-size", dest="log_size", action="store", default=10, type=int, help="Maximum log size per file (in MB)"
+    "-w", 
+    "--width",
+    dest="width", 
+    default=os.environ.get("QBT_WIDTH", 100),
+    type=int,
+    help="Screen Width (Default: 100)"
 )
 parser.add_argument(
-    "-lc", "--log-count", dest="log_count", action="store", default=5, type=int, help="Maximum mumber of logs to keep"
+    "-ls",
+    "--log-size",
+    dest="log_size",
+    action="store",
+    default=os.environ.get("QBT_LOG_SIZE", 10),
+    type=int,
+    help="Maximum log size per file (in MB)"
+)
+parser.add_argument(
+    "-lc", 
+    "--log-count",
+    dest="log_count", 
+    action="store", 
+    default=os.environ.get("QBT_LOG_COUNT", 5),
+    type=int,
+    help="Maximum mumber of logs to keep"
 )
 parser.add_argument("-v", "--version", dest="version", action="store_true", default=False, help="Display the version and exit")
 # Use parse_known_args to ignore PyInstaller/multiprocessing injected flags on Windows
