@@ -12,16 +12,20 @@ class ReCheck:
         self.client = qbit_manager.client
         self.stats_resumed = 0
         self.stats_rechecked = 0
+        self.stats_started = 0
 
         self.torrents_updated_recheck = []  # List of torrents updated
         # List of single torrent attributes to send to notifiarr
         self.notify_attr_recheck = []
         self.torrents_updated_resume = []  # List of torrents updated
         self.notify_attr_resume = []  # List of single torrent attributes to send to notifiarr
+        self.torrents_updated_start = []  # List of torrents updated
+        self.notify_attr_start = []  # List of single torrent attributes to send to notifiarr
 
         self.recheck()
         self.config.webhooks_factory.notify(self.torrents_updated_resume, self.notify_attr_resume, group_by="tag")
         self.config.webhooks_factory.notify(self.torrents_updated_recheck, self.notify_attr_recheck, group_by="tag")
+        self.config.webhooks_factory.notify(self.torrents_updated_start, self.notify_attr_start, group_by="tag")
 
     def recheck(self):
         """Function used to recheck paused torrents sorted by size and resume torrents that are completed"""
@@ -128,3 +132,28 @@ class ReCheck:
                         self.notify_attr_recheck.append(attr)
                         if not self.config.dry_run:
                             torrent.recheck()
+                    # Recheck
+                    elif (
+                        torrent.progress == 0
+                        and not self.qbt.torrentinfo[t_name]["is_complete"]
+                        and torrent.state_enum.is_stopped
+                    ):
+                        self.stats_started += 1
+                        body = logger.print_line(
+                            f"{'Not Starting' if self.config.dry_run else 'Starting'} [{tracker['tag']}] - {t_name}",
+                            self.config.loglevel,
+                        )
+                        attr = {
+                            "function": "recheck",
+                            "title": "Starting Torrent",
+                            "body": body,
+                            "torrents": [t_name],
+                            "torrent_tag": ", ".join(tracker["tag"]),
+                            "torrent_category": t_category,
+                            "torrent_tracker": tracker["url"],
+                            "notifiarr_indexer": tracker["notifiarr"],
+                        }
+                        self.torrents_updated_recheck.append(t_name)
+                        self.notify_attr_recheck.append(attr)
+                        if not self.config.dry_run:
+                            torrent.start()

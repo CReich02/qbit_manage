@@ -35,19 +35,19 @@ if current_version < (REQUIRED_VERSION):
 
 parser = argparse.ArgumentParser("qBittorrent Manager.", description="A mix of scripts combined for managing qBittorrent.")
 parser.add_argument(
-    "-db", 
-    "--debug", 
-    dest="debug", 
-    action="store_true", 
-    default=os.environ.get("QBT_DEBUG", False), 
+    "-db",
+    "--debug",
+    dest="debug",
+    action="store_true",
+    default=os.environ.get("QBT_DEBUG", False),
     help=argparse.SUPPRESS
 )
 parser.add_argument(
-    "-tr", 
-    "--trace", 
-    dest="trace", 
-    action="store_true", 
-    default=os.environ.get("QBT_TRACE", False), 
+    "-tr",
+    "--trace",
+    dest="trace",
+    action="store_true",
+    default=os.environ.get("QBT_TRACE", False),
     help=argparse.SUPPRESS
 )
 parser.add_argument(
@@ -201,26 +201,26 @@ parser.add_argument(
     help="If you would like to see what is gonna happen but not actually move/delete or tag/categorize anything.",
 )
 parser.add_argument(
-    "-ll", 
-    "--log-level", 
-    dest="log_level", 
-    action="store", 
-    default=os.environ.get("QBT_LOG_LEVEL", "INFO"), 
-    type=str, 
+    "-ll",
+    "--log-level",
+    dest="log_level",
+    action="store",
+    default=os.environ.get("QBT_LOG_LEVEL", "INFO"),
+    type=str,
     help="Change your log level."
 )
 parser.add_argument(
-    "-d", 
+    "-d",
     "--divider",
-    dest="divider", 
-    default=os.environ.get("QBT_DIVIDER", "="), 
+    dest="divider",
+    default=os.environ.get("QBT_DIVIDER", "="),
     type=str,
     help="Character that divides the sections (Default: '=')"
 )
 parser.add_argument(
-    "-w", 
+    "-w",
     "--width",
-    dest="width", 
+    dest="width",
     default=os.environ.get("QBT_WIDTH", 100),
     type=int,
     help="Screen Width (Default: 100)"
@@ -235,10 +235,10 @@ parser.add_argument(
     help="Maximum log size per file (in MB)"
 )
 parser.add_argument(
-    "-lc", 
+    "-lc",
     "--log-count",
-    dest="log_count", 
-    action="store", 
+    dest="log_count",
+    action="store",
     default=os.environ.get("QBT_LOG_COUNT", 5),
     type=int,
     help="Maximum mumber of logs to keep"
@@ -440,6 +440,7 @@ def start():
         "deleted_contents": 0,
         "resumed": 0,
         "rechecked": 0,
+        "started": 0,
         "orphaned": 0,
         "recycle_emptied": 0,
         "orphaned_emptied": 0,
@@ -512,6 +513,7 @@ def start():
             recheck = ReCheck(qbit_manager)
             stats["resumed"] += recheck.stats_resumed
             stats["rechecked"] += recheck.stats_rechecked
+            stats["started"] += recheck.stats_started
 
         # Tag NoHardLinks
         if cfg.commands["tag_nohardlinks"]:
@@ -555,6 +557,8 @@ def start():
         stats_summary.append(f"Total Torrents Resumed: {stats['resumed']}")
     if stats["rechecked"] > 0:
         stats_summary.append(f"Total Torrents Rechecked: {stats['rechecked']}")
+    if stats["started"] > 0:
+        stats_summary.append(f"Total Torrents Started: {stats['started']}")
     if stats["deleted"] > 0:
         stats_summary.append(f"Total Torrents Deleted: {stats['deleted']}")
     if stats["deleted_contents"] > 0:
