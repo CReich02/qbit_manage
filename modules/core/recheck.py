@@ -14,16 +14,20 @@ class ReCheck:
         self.client = qbit_manager.client
         self.stats_resumed = 0
         self.stats_rechecked = 0
+        self.stats_started = 0
 
         self.torrents_updated_recheck = []  # List of torrents updated
         # List of single torrent attributes to send to notifiarr
         self.notify_attr_recheck = []
         self.torrents_updated_resume = []  # List of torrents updated
         self.notify_attr_resume = []  # List of single torrent attributes to send to notifiarr
+        self.torrents_updated_start = []  # List of torrents updated
+        self.notify_attr_start = []  # List of single torrent attributes to send to notifiarr
 
         self.recheck()
         self.config.webhooks_factory.notify(self.torrents_updated_resume, self.notify_attr_resume, group_by="tag")
         self.config.webhooks_factory.notify(self.torrents_updated_recheck, self.notify_attr_recheck, group_by="tag")
+        self.config.webhooks_factory.notify(self.torrents_updated_start, self.notify_attr_start, group_by="tag")
 
     def recheck(self):
         """Function used to recheck paused torrents sorted by size and resume torrents that are completed"""
