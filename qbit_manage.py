@@ -298,7 +298,7 @@ parser.add_argument(
     action="store",
     default=os.environ.get("QBT_LOG_COUNT", 5),
     type=int,
-    help="Maximum mumber of logs to keep"
+    help="Maximum number of logs to keep"
 )
 parser.add_argument("-v", "--version", dest="version", action="store_true", default=False, help="Display the version and exit")
 # Use parse_known_args to ignore PyInstaller/multiprocessing injected flags on Windows
