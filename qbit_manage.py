@@ -11,6 +11,43 @@ import time
 from datetime import datetime
 from datetime import timedelta
 from functools import lru_cache
+from modules.util import kill_duplicate_processes  # noqa
+
+# Check if the script is already running
+lock_file = "qbit_manage.lock"
+
+if os.path.exists(lock_file):
+    lock_file_modification_time = os.path.getmtime(lock_file)
+    lock_file_age = time.time() - lock_file_modification_time
+    if lock_file_age < 60:  # Check if the lock file is less than 1 minute old
+        print(f"Another instance is running and Lock file is less than 1 minute old. Exiting.")
+        sys.exit()
+    else:
+        print(f"Lock file is older than 1 minute. Killing duplicate processes and removing lock file.")
+        try:
+            kill_duplicate_processes()
+            if os.path.exists(lock_file):
+                os.remove(lock_file)
+        except Exception as e:
+            print(f"An error occurred while killing duplicate processes and removing lock file: {e}")
+
+try:
+    with open(lock_file, "w") as f:
+        f.write(str(os.getpid()))  # Write the process ID to the lock file
+except Exception as e:
+    print(f"An error occurred while creating lock file: {e}")
+    sys.exit(1)
+
+# Custom exit hook to remove the lock file
+def custom_exit(status=0):
+    if os.path.exists(lock_file):
+        os.remove(lock_file)
+        print("Lock file removed.")
+    original_exit(status)
+
+original_exit = sys.exit
+sys.exit = custom_exit
+# End of custom exit hook
 
 try:
     import schedule
@@ -241,7 +278,7 @@ parser.add_argument(
     action="store",
     default=os.environ.get("QBT_LOG_COUNT", 5),
     type=int,
-    help="Maximum mumber of logs to keep"
+    help="Maximum number of logs to keep"
 )
 args = parser.parse_args()
 

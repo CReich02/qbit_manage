@@ -13,6 +13,8 @@ import requests
 import ruamel.yaml
 from pytimeparse2 import parse
 from ruamel.yaml.constructor import ConstructorError
+import psutil
+import sys
 
 logger = logging.getLogger("qBit Manage")
 
@@ -834,3 +836,30 @@ class EnvStr(str):
     def __repr__(self):
         """Return the resolved value as a string"""
         return super().__repr__()
+
+def kill_duplicate_processes():
+    """Finds and kills duplicate processes of the same script."""
+    current_pid = os.getpid()
+    script_name = os.path.basename(sys.argv[0])  # Get the script's filename
+    processes_to_kill = []
+
+    for process in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            process_info = process.info
+            if process_info['name'] == 'python':  # Check if it's a python process
+                cmdline = process_info.get('cmdline', [])
+                if len(cmdline) > 1 and os.path.basename(cmdline[1]) == script_name:
+                      if process_info['pid'] != current_pid:
+                         processes_to_kill.append(process_info['pid'])
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
+    if processes_to_kill:
+        print("Duplicate processes found, killing...")
+        for pid in processes_to_kill:
+            try:
+                process = psutil.Process(pid)
+                process.kill()  # Send SIGKILL to force terminate
+                print(f"Killed process with PID: {pid}")
+            except psutil.NoSuchProcess:
+               print(f"Process with PID: {pid} not found.")
