@@ -147,7 +147,7 @@ class MyLogger:
         if border:
             self.print_line(border_text, loglevel)
         if text:
-            text_list = text.split("\n")
+            text_list = text.split(os.linesep)
             for txt in text_list:
                 self.print_line(f"|{sep}{self._centered(txt, sep=sep, side_space=side_space, left=left)}{sep}|", loglevel)
             if border:
