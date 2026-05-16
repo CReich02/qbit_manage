@@ -21,6 +21,7 @@ logger = util.logger
 
 COMMANDS = [
     "recheck",
+    "start_new",
     "cat_update",
     "tag_update",
     "rem_unregistered",
@@ -380,6 +381,7 @@ class Config:
         """
         default_function = {
             "recheck": None,
+            "start_new": None,
             "cat_update": None,
             "tag_update": None,
             "rem_unregistered": None,

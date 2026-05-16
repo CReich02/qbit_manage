@@ -48,6 +48,7 @@ services:
 
       # Command Flags
       - QBT_RECHECK=false
+      - QBT_START_NEW=false
       - QBT_CAT_UPDATE=false
       - QBT_TAG_UPDATE=false
       - QBT_REM_UNREGISTERED=false

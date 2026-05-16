@@ -164,6 +164,14 @@ parser.add_argument(
     help="Recheck paused torrents sorted by lowest size. Resume if Completed.",
 )
 parser.add_argument(
+    "-sn",
+    "--start-new",
+    dest="start_new",
+    action="store_true",
+    default=os.environ.get("QBT_START_NEW", False),
+    help="Start new torrents sorted by date added.",
+)
+parser.add_argument(
     "-cu",
     "--cat-update",
     dest="cat_update",
@@ -375,6 +383,7 @@ for v in [
     "config_files",
     "log_file",
     "recheck",
+    "start_new",
     "cat_update",
     "tag_update",
     "rem_unregistered",
@@ -431,6 +440,7 @@ except AttributeError:
 from modules.config import Config  # noqa
 from modules.core.category import Category  # noqa
 from modules.core.recheck import ReCheck  # noqa
+from modules.core.start_new import StartNew  # noqa
 from modules.core.remove_orphaned import RemoveOrphaned  # noqa
 from modules.core.remove_unregistered import RemoveUnregistered  # noqa
 from modules.core.share_limits import ShareLimits  # noqa

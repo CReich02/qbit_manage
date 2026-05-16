@@ -28,7 +28,7 @@ class Qbt:
 
     SUPPORTED_VERSION = Version.latest_supported_app_version()
     MIN_SUPPORTED_VERSION = "v4.3.0"
-    TORRENT_DICT_COMMANDS = ["recheck", "rem_unregistered", "tag_tracker_error", "tag_nohardlinks", "share_limits"]
+    TORRENT_DICT_COMMANDS = ["recheck", "start_new", "rem_unregistered", "tag_tracker_error", "tag_nohardlinks", "share_limits"]
 
     def __init__(self, config, params):
         self.config = config

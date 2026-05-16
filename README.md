@@ -18,6 +18,7 @@ This is a program used to manage your qBittorrent instance such as:
 * Change categories based on current category (`cat_change`)
 * Remove unregistered torrents (delete data & torrent if it is not being cross-seeded, otherwise it will just remove the torrent)
 * Recheck paused torrents sorted by lowest size and resume if completed
+* Start new torrents sorted by date added
 * Remove orphaned files from your root directory that are not referenced by qBittorrent
 * Tag any torrents that have no hard links outside the root folder (for multi-file torrents the largest file is used)
 * Apply share limits based on groups filtered by tags/categories and allows optional cleanup to delete these torrents and contents based on maximum ratio and/or time seeded. Additionally allows for a minimum seed time to ensure tracker rules are respected and minimum number of seeders to keep torrents alive.

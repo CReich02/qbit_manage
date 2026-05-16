@@ -299,6 +299,7 @@ Provide webhook notifications based on event triggers
 | [run_start](#run-start-notifications)                           | At the beginning of every run                                        | N/A            | <center>❌</center> |
 | [run_end](#run-end-notifications)                               | At the end of every run                                              | N/A            | <center>❌</center> |
 | [recheck](#recheck-notifications)                               | During the recheck function                                          | N/A            | <center>❌</center> |
+| [start_new](#start-new-torrent-notifications)                               | During the start new torrent function                                          | N/A            | <center>❌</center> |
 | [cat_update](#category-update-notifications)                    | During the category update function                                  | N/A            | <center>❌</center> |
 | [tag_update](#tag-update-notifications)                         | During the tag update function                                       | N/A            | <center>❌</center> |
 | [rem_unregistered](#remove-unregistered-torrents-notifications) | During the removing unregistered torrents function                   | N/A            | <center>❌</center> |
@@ -364,6 +365,7 @@ Payload will be sent at the end of the run
   "torrents_deleted_and_contents_count": int, // Total Torrents + Contents Deleted
   "torrents_resumed": int,                    // Total Torrents Resumed
   "torrents_rechecked": int,                  // Total Torrents Rechecked
+  "torrents_started": int,                    // Total New Torrents Started
   "torrents_categorized": int,                // Total Torrents Categorized
   "torrents_tagged": int,                     // Total Torrents Tagged
   "remove_unregistered": int,                 // Total Unregistered Torrents Removed
@@ -399,6 +401,23 @@ Payload will be sent when rechecking/resuming a torrent that is paused
   : str, ? // Torrent Tracker URL
     "notifiarr_indexer"
   : str, // Notifiarr React name/id for indexer }
+```
+
+### **Start New Torrent Notifications**
+
+Payload will be sent when starting a new torrent that is stopped
+
+```yaml
+{
+  "function": "start_new",           // Webhook Trigger keyword
+  "title": str,                      // Title of the Payload
+  "body": str,                       // Message of the Payload
+  "torrents": [str],                 // List of Torrent Names
+  "torrent_tag": str,                // Torrent Tags
+  "torrent_category": str,           // Torrent Category
+  "torrent_tracker": str,            // Torrent Tracker URL
+  "notifiarr_indexer": str,          // Notifiarr React name/id for indexer
+}
 ```
 
 ### **Category Update Notifications**

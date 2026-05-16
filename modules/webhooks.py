@@ -161,6 +161,7 @@ class Webhooks:
                     "torrents_deleted_and_contents_count": stats["deleted_contents"],
                     "torrents_resumed": stats["resumed"],
                     "torrents_rechecked": stats["rechecked"],
+                    "torrents_started": stats["started"],
                     "torrents_categorized": stats["categorized"],
                     "torrents_tagged": stats["tagged"],
                     "remove_unregistered": stats["rem_unreg"],

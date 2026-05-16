@@ -8,6 +8,7 @@ commands:
   # The commands defined below will OVERRIDE any commands used in command line and docker env variables.
   dry_run: True
   recheck: False
+  start_new: False
   cat_update: False
   tag_update: False
   rem_unregistered: False
@@ -337,6 +338,7 @@ webhooks:
   run_end: apprise
   function:
     recheck: notifiarr
+    start_new: notifiarr
     cat_update: apprise
     tag_update: notifiarr
     rem_unregistered: notifiarr
